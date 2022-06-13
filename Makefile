@@ -20,5 +20,3 @@ stop:
 	docker-compose stop
 	symfony server:stop
 .PHONY: stop
-
-
