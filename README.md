@@ -5,6 +5,7 @@
 - [PHP 8.1](https://www.php.net/downloads.php)
 - [Docker](https://getcomposer.org/)
 - [Symfony CLI](https://symfony.com/download)
+- [Make](https://www.gnu.org/software/make/)
 
 ## How to install project
 - clone this repo `git clone https://github.com/Sebastien-jo/Petty-Care-Back/tree/back/master`
