@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -28,8 +30,13 @@ class User
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private $pet_id;
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Pet::class, orphanRemoval: true)]
+    private $pets;
+
+    public function __construct()
+    {
+        $this->pets = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -96,14 +103,32 @@ class User
         return $this;
     }
 
-    public function getPetId(): ?int
+    /**
+     * @return Collection<int, Pet>
+     */
+    public function getPets(): Collection
     {
-        return $this->pet_id;
+        return $this->pets;
     }
 
-    public function setPetId(?int $pet_id): self
+    public function addPet(Pet $pet): self
     {
-        $this->pet_id = $pet_id;
+        if (!$this->pets->contains($pet)) {
+            $this->pets[] = $pet;
+            $pet->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removePet(Pet $pet): self
+    {
+        if ($this->pets->removeElement($pet)) {
+            // set the owning side to null (unless already changed)
+            if ($pet->getUserId() === $this) {
+                $pet->setUserId(null);
+            }
+        }
 
         return $this;
     }
