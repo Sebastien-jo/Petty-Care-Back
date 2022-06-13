@@ -41,6 +41,9 @@ class Pet
     #[ORM\OneToOne(mappedBy: 'pet', targetEntity: Necklace::class, cascade: ['persist', 'remove'])]
     private $necklace;
 
+    #[ORM\ManyToOne(targetEntity: Toy::class, inversedBy: 'pet')]
+    private $toy;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -155,6 +158,18 @@ class Pet
         }
 
         $this->necklace = $necklace;
+
+        return $this;
+    }
+
+    public function getToy(): ?Toy
+    {
+        return $this->toy;
+    }
+
+    public function setToy(?Toy $toy): self
+    {
+        $this->toy = $toy;
 
         return $this;
     }

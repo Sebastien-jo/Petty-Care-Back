@@ -33,9 +33,13 @@ class User
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Pet::class, orphanRemoval: true)]
     private $pets;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Toy::class, orphanRemoval: true)]
+    private $toys;
+
     public function __construct()
     {
         $this->pets = new ArrayCollection();
+        $this->toys = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -127,6 +131,36 @@ class User
             // set the owning side to null (unless already changed)
             if ($pet->getUserId() === $this) {
                 $pet->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Toy>
+     */
+    public function getToys(): Collection
+    {
+        return $this->toys;
+    }
+
+    public function addToy(Toy $toy): self
+    {
+        if (!$this->toys->contains($toy)) {
+            $this->toys[] = $toy;
+            $toy->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeToy(Toy $toy): self
+    {
+        if ($this->toys->removeElement($toy)) {
+            // set the owning side to null (unless already changed)
+            if ($toy->getUser() === $this) {
+                $toy->setUser(null);
             }
         }
 
