@@ -38,6 +38,9 @@ class Pet
     #[ORM\JoinColumn(nullable: false)]
     private $user;
 
+    #[ORM\OneToOne(mappedBy: 'pet', targetEntity: Necklace::class, cascade: ['persist', 'remove'])]
+    private $necklace;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -135,6 +138,23 @@ class Pet
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getNecklace(): ?Necklace
+    {
+        return $this->necklace;
+    }
+
+    public function setNecklace(Necklace $necklace): self
+    {
+        // set the owning side of the relation if necessary
+        if ($necklace->getPet() !== $this) {
+            $necklace->setPet($this);
+        }
+
+        $this->necklace = $necklace;
 
         return $this;
     }
