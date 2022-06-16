@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ApiResource]
 class User
 {
     #[ORM\Id]
@@ -29,12 +31,12 @@ class User
 
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
-
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Pet::class, orphanRemoval: true)]
-    private $pets;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Toy::class, orphanRemoval: true)]
-    private $toys;
+//
+//    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Pet::class, orphanRemoval: true)]
+//    private $pets;
+//
+//    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Toy::class, orphanRemoval: true)]
+//    private $toys;
 
     public function __construct()
     {
@@ -106,64 +108,64 @@ class User
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Pet>
-     */
-    public function getPets(): Collection
-    {
-        return $this->pets;
-    }
-
-    public function addPet(Pet $pet): self
-    {
-        if (!$this->pets->contains($pet)) {
-            $this->pets[] = $pet;
-            $pet->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removePet(Pet $pet): self
-    {
-        if ($this->pets->removeElement($pet)) {
-            // set the owning side to null (unless already changed)
-            if ($pet->getUserId() === $this) {
-                $pet->setUserId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Toy>
-     */
-    public function getToys(): Collection
-    {
-        return $this->toys;
-    }
-
-    public function addToy(Toy $toy): self
-    {
-        if (!$this->toys->contains($toy)) {
-            $this->toys[] = $toy;
-            $toy->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeToy(Toy $toy): self
-    {
-        if ($this->toys->removeElement($toy)) {
-            // set the owning side to null (unless already changed)
-            if ($toy->getUser() === $this) {
-                $toy->setUser(null);
-            }
-        }
-
-        return $this;
-    }
+//
+//    /**
+//     * @return Collection<int, Pet>
+//     */
+//    public function getPets(): Collection
+//    {
+//        return $this->pets;
+//    }
+//
+//    public function addPet(Pet $pet): self
+//    {
+//        if (!$this->pets->contains($pet)) {
+//            $this->pets[] = $pet;
+//            $pet->setUserId($this);
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removePet(Pet $pet): self
+//    {
+//        if ($this->pets->removeElement($pet)) {
+//            // set the owning side to null (unless already changed)
+//            if ($pet->getUserId() === $this) {
+//                $pet->setUserId(null);
+//            }
+//        }
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * @return Collection<int, Toy>
+//     */
+//    public function getToys(): Collection
+//    {
+//        return $this->toys;
+//    }
+//
+//    public function addToy(Toy $toy): self
+//    {
+//        if (!$this->toys->contains($toy)) {
+//            $this->toys[] = $toy;
+//            $toy->setUser($this);
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removeToy(Toy $toy): self
+//    {
+//        if ($this->toys->removeElement($toy)) {
+//            // set the owning side to null (unless already changed)
+//            if ($toy->getUser() === $this) {
+//                $toy->setUser(null);
+//            }
+//        }
+//
+//        return $this;
+//    }
 }
