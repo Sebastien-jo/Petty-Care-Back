@@ -13,7 +13,7 @@ class Necklace
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'date', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $date_of_purchase;
 
     #[ORM\OneToOne(inversedBy: 'necklace', targetEntity: Pet::class, cascade: ['persist', 'remove'])]
