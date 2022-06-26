@@ -7,15 +7,26 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
+
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    private $email;
+
+    #[ORM\Column(type: 'json')]
+    private $roles = [];
+
+    #[ORM\Column(type: 'string')]
+    private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $firstname;
@@ -23,30 +34,85 @@ class User
     #[ORM\Column(type: 'string', length: 255)]
     private $lastname;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $email;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $adress;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $password;
-
-    #[ORM\Column(type: 'datetime_immutable')]
-    private $createdAt;
-//
-//    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Pet::class, orphanRemoval: true)]
-//    private $pets;
-//
-//    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Toy::class, orphanRemoval: true)]
-//    private $toys;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Necklace::class, orphanRemoval: true)]
+    private $necklaces;
 
     public function __construct()
     {
-        $this->pets = new ArrayCollection();
-        $this->toys = new ArrayCollection();
+        $this->necklaces = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
     public function getFirstname(): ?string
@@ -73,99 +139,45 @@ class User
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getAdress(): ?string
     {
-        return $this->email;
+        return $this->adress;
     }
 
-    public function setEmail(string $email): self
+    public function setAdress(?string $adress): self
     {
-        $this->email = $email;
+        $this->adress = $adress;
 
         return $this;
     }
 
-    public function getPassword(): ?string
+    /**
+     * @return Collection<int, Necklace>
+     */
+    public function getNecklaces(): Collection
     {
-        return $this->password;
+        return $this->necklaces;
     }
 
-    public function setPassword(string $password): self
+    public function addNecklace(Necklace $necklace): self
     {
-        $this->password = $password;
+        if (!$this->necklaces->contains($necklace)) {
+            $this->necklaces[] = $necklace;
+            $necklace->setUser($this);
+        }
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function removeNecklace(Necklace $necklace): self
     {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
+        if ($this->necklaces->removeElement($necklace)) {
+            // set the owning side to null (unless already changed)
+            if ($necklace->getUser() === $this) {
+                $necklace->setUser(null);
+            }
+        }
 
         return $this;
     }
-//
-//    /**
-//     * @return Collection<int, Pet>
-//     */
-//    public function getPets(): Collection
-//    {
-//        return $this->pets;
-//    }
-//
-//    public function addPet(Pet $pet): self
-//    {
-//        if (!$this->pets->contains($pet)) {
-//            $this->pets[] = $pet;
-//            $pet->setUserId($this);
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removePet(Pet $pet): self
-//    {
-//        if ($this->pets->removeElement($pet)) {
-//            // set the owning side to null (unless already changed)
-//            if ($pet->getUserId() === $this) {
-//                $pet->setUserId(null);
-//            }
-//        }
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * @return Collection<int, Toy>
-//     */
-//    public function getToys(): Collection
-//    {
-//        return $this->toys;
-//    }
-//
-//    public function addToy(Toy $toy): self
-//    {
-//        if (!$this->toys->contains($toy)) {
-//            $this->toys[] = $toy;
-//            $toy->setUser($this);
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removeToy(Toy $toy): self
-//    {
-//        if ($this->toys->removeElement($toy)) {
-//            // set the owning side to null (unless already changed)
-//            if ($toy->getUser() === $this) {
-//                $toy->setUser(null);
-//            }
-//        }
-//
-//        return $this;
-//    }
 }
