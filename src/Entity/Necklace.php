@@ -20,6 +20,10 @@ class Necklace
     #[ORM\JoinColumn(nullable: false)]
     private $pet;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'necklaces')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $user;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +49,18 @@ class Necklace
     public function setPet(Pet $pet): self
     {
         $this->pet = $pet;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
