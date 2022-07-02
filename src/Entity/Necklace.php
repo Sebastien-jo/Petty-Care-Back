@@ -17,12 +17,7 @@ class Necklace
     private $date_of_purchase;
 
     #[ORM\OneToOne(inversedBy: 'necklace', targetEntity: Pet::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
     private $pet;
-
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'necklaces')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $user;
 
     public function getId(): ?int
     {
@@ -46,21 +41,9 @@ class Necklace
         return $this->pet;
     }
 
-    public function setPet(Pet $pet): self
+    public function setPet(?Pet $pet): self
     {
         $this->pet = $pet;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
 
         return $this;
     }

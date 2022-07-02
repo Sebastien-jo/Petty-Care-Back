@@ -43,9 +43,6 @@ class Pet
     #[ORM\OneToOne(mappedBy: 'pet', targetEntity: Necklace::class, cascade: ['persist', 'remove'])]
     private $necklace;
 
-    #[ORM\ManyToOne(targetEntity: Toy::class, inversedBy: 'pet')]
-    private $toy;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -152,26 +149,19 @@ class Pet
         return $this->necklace;
     }
 
-    public function setNecklace(Necklace $necklace): self
+    public function setNecklace(?Necklace $necklace): self
     {
+        // unset the owning side of the relation if necessary
+        if ($necklace === null && $this->necklace !== null) {
+            $this->necklace->setPet(null);
+        }
+
         // set the owning side of the relation if necessary
-        if ($necklace->getPet() !== $this) {
+        if ($necklace !== null && $necklace->getPet() !== $this) {
             $necklace->setPet($this);
         }
 
         $this->necklace = $necklace;
-
-        return $this;
-    }
-
-    public function getToy(): ?Toy
-    {
-        return $this->toy;
-    }
-
-    public function setToy(?Toy $toy): self
-    {
-        $this->toy = $toy;
 
         return $this;
     }
