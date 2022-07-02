@@ -37,12 +37,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $adress;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Necklace::class, orphanRemoval: true)]
-    private $necklaces;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Pet::class, orphanRemoval: true)]
+    private $pets;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Toy::class, orphanRemoval: true)]
+    private $toys;
 
     public function __construct()
     {
-        $this->necklaces = new ArrayCollection();
+        $this->pets = new ArrayCollection();
+        $this->toys = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -152,29 +156,59 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Necklace>
+     * @return Collection<int, Pet>
      */
-    public function getNecklaces(): Collection
+    public function getPets(): Collection
     {
-        return $this->necklaces;
+        return $this->pets;
     }
 
-    public function addNecklace(Necklace $necklace): self
+    public function addPet(Pet $pet): self
     {
-        if (!$this->necklaces->contains($necklace)) {
-            $this->necklaces[] = $necklace;
-            $necklace->setUser($this);
+        if (!$this->pets->contains($pet)) {
+            $this->pets[] = $pet;
+            $pet->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeNecklace(Necklace $necklace): self
+    public function removePet(Pet $pet): self
     {
-        if ($this->necklaces->removeElement($necklace)) {
+        if ($this->pets->removeElement($pet)) {
             // set the owning side to null (unless already changed)
-            if ($necklace->getUser() === $this) {
-                $necklace->setUser(null);
+            if ($pet->getUser() === $this) {
+                $pet->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Toy>
+     */
+    public function getToys(): Collection
+    {
+        return $this->toys;
+    }
+
+    public function addToy(Toy $toy): self
+    {
+        if (!$this->toys->contains($toy)) {
+            $this->toys[] = $toy;
+            $toy->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeToy(Toy $toy): self
+    {
+        if ($this->toys->removeElement($toy)) {
+            // set the owning side to null (unless already changed)
+            if ($toy->getUser() === $this) {
+                $toy->setUser(null);
             }
         }
 
