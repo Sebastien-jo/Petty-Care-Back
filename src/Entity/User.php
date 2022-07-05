@@ -2,46 +2,104 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\AuthenticationController;
+use App\Controller\RegisterController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Controller\MeController;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[ApiResource(
+    collectionOperations: [
+        'register' => [
+            'method' => 'POST',
+            'path' => '/register',
+            'controller' => RegisterController::class
+        ],
+        'login' => [
+            'path' => '/login',
+            'Renormalization_context' => ['groups' => 'login:user'],
+            'method' => 'POST',
+            'controller' => AuthenticationController::class,
+            'openapi_context' => [
+                'example' => 'hello'
+            ]
+        ],
+    ],
+    itemOperations: [
+        'me' => [
+            'pagination_enabled' => false,
+            'path' => '/user/{id}',
+            'method' => 'get',
+            'controller' => MeController::class,
+            'read' => false,
+            'normalization_context' => ['groups' => 'read:user'],
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ],
+
+        'get' => [
+            'controller' => NotFoundAction::class,
+            'read' => false,
+            'output' => false,
+            'normalization_context' => ['groups' => 'read:user']
+        ],
+    ],
+    denormalizationContext: ['groups' => ['write:user']],
+    normalizationContext: ['groups' => ['read:user']],
+)]
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:user'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Groups(['read:user', 'write:user', 'login:user'])]
     private $email;
 
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
+    #[Groups(['write:user', 'login:user'])]
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read:user', 'write:user'])]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read:user', 'write:user'])]
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $adress;
+    #[Groups(['read:user', 'write:user'])]
+    private $address;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Pet::class, orphanRemoval: true)]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['read:user'])]
     private $pets;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Toy::class, orphanRemoval: true)]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['read:user'])]
     private $toys;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: false)]
+    private $createdAt;
 
     public function __construct()
     {
@@ -52,6 +110,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -143,14 +208,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAdress(): ?string
+    public function getAddress(): ?string
     {
-        return $this->adress;
+        return $this->address;
     }
 
-    public function setAdress(?string $adress): self
+    public function setAddress(?string $address): self
     {
-        $this->adress = $adress;
+        $this->address = $address;
 
         return $this;
     }
@@ -211,6 +276,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $toy->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public static function createFromPayload($id, array $payload): User|JWTUserInterface
+    {
+        return (new User())->setId($id);
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

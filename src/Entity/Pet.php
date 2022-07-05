@@ -21,7 +21,7 @@ class Pet
     #[ORM\Column(type: 'float', nullable: true)]
     private $weight;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $age;
 
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -41,7 +41,14 @@ class Pet
     private $user;
 
     #[ORM\OneToOne(mappedBy: 'pet', targetEntity: Necklace::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)]
     private $necklace;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private $weightGoal;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $status;
 
     public function getId(): ?int
     {
@@ -72,12 +79,12 @@ class Pet
         return $this;
     }
 
-    public function getAge(): ?int
+    public function getAge(): ?\DateTime
     {
         return $this->age;
     }
 
-    public function setAge(?int $age): self
+    public function setAge(?\DateTime $age): self
     {
         $this->age = $age;
 
@@ -162,6 +169,30 @@ class Pet
         }
 
         $this->necklace = $necklace;
+
+        return $this;
+    }
+
+    public function getWeightGoal(): ?float
+    {
+        return $this->weightGoal;
+    }
+
+    public function setWeightGoal(?float $weightGoal): self
+    {
+        $this->weightGoal = $weightGoal;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
