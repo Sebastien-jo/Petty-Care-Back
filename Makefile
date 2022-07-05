@@ -15,6 +15,11 @@ start:
 	symfony serve -d
 .PHONY: start
 
+cc: export APP_ENV=dev
+cc:
+	php bin/console cache:clear
+.PHONY: cc
+
 stop: export APP_ENV=dev
 stop:
 	docker-compose stop
