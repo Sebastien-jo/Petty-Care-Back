@@ -10,7 +10,7 @@
 ## How to install project
 - clone this repo `git clone https://github.com/Sebastien-jo/Petty-Care-Back/tree/back/master`
 - use the command `make install`
-(*This command will create all containers needed, start your locale server and migrate all enttities in your database*)
+(*This command will create all containers needed, start your locale server and migrate all entities in your database*)
 
 ## Workflow
 ### Branch naming
