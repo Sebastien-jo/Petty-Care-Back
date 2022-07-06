@@ -25,3 +25,8 @@ stop:
 	docker-compose stop
 	symfony server:stop
 .PHONY: stop
+
+openapi: export APP_ENV=dev
+openapi:
+	php bin/console api:openapi:export --yaml > src/openapi.yaml
+.PHONY: openapi
