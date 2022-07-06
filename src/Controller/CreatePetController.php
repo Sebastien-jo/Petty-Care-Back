@@ -17,6 +17,6 @@ class CreatePetController extends AbstractController
     {
         $this->petManager->createPet($data);
 
-        return $this->json([$data, 201]);
+        return $this->json([$data, 201, ['message' => 'Pet created']]);
     }
 }

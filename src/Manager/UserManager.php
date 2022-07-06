@@ -49,4 +49,18 @@ class UserManager
             "user" => $user
         ];
     }
+
+    public function onUpdate(User $user)
+    {
+        $plainTextPassword = $this->passwordService->hash($user, $user->getPassword());
+        $user->setPassword($plainTextPassword);
+        $user->setUpdatedAt(new \DateTimeImmutable());
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        return [
+            "message" => "User updated",
+            "user" => $user
+        ];
+    }
 }
