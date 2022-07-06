@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\AuthenticationController;
 use App\Controller\RegisterController;
@@ -46,16 +45,7 @@ use App\Controller\MeController;
                 'security' => [['bearerAuth' => []]]
             ]
         ],
-
-        'get' => [
-            'controller' => NotFoundAction::class,
-            'read' => false,
-            'output' => false,
-            'normalization_context' => ['groups' => 'read:user']
-        ],
     ],
-    denormalizationContext: ['groups' => ['write:user']],
-    normalizationContext: ['groups' => ['read:user']],
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {

@@ -36,13 +36,9 @@ class UserManager
         if($email){
             throw new BadRequestHttpException("email déjà existant");
         }
-//        dd($user);
-//        $user->setEmail($user->getEmail());
         $plainTextPassword = $this->passwordService->hash($user, $user->getPassword());
         $user->setPassword($plainTextPassword);
-//        $user->setFirstname($user->getFirstname());
         $user->setAddress($user->getAddress());
-//        $user->setLastname($user->getLastname());
         $user->setCreatedAt(new \DateTimeImmutable());
         $user->setRoles(['ROLE_USER']);
         $this->entityManager->persist($user);

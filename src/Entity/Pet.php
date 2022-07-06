@@ -3,11 +3,68 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\CreatePetController;
 use App\Repository\PetRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PetRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        'pets' => [
+            'normalization_context' => ['groups' => 'read:pet'],
+            'method' => 'Get',
+            'path' => '/pets',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+                'description' => 'retrieve all your pets'
+            ]
+        ],
+        'createPet' => [
+            'Renormalization_context' => ['groups' => 'write:pet'],
+            'controller' => CreatePetController::class,
+            'method' => 'Post',
+            'path' => '/pets/create',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+                'description' => 'add a new pet'
+                ]
+        ]
+    ],
+    itemOperations: [
+        'pet' => [
+            'schema' => [
+                'normalization_context' => ['groups' => 'read:pet'],
+            ],
+            'method' => 'Get',
+            'path'=> '/pets/{id}',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+                'description' => 'information of one pet'
+            ]
+        ],
+        'deletePet' => [
+            'method' => 'Delete',
+            'path' => 'pets/{id}/delete',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+                'description' => 'delete a pet'
+            ]
+        ],
+        'editPet' => [
+            'schema' => [
+                'Renormalization_context' => ['groups' => 'put:pet'],
+            ],
+            'method' => 'Put',
+            'path' => 'pets/{id}/edit',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+                'description' => 'edit information for a pet'
+            ]
+        ]
+    ]
+)]
 class Pet
 {
     #[ORM\Id]
@@ -16,24 +73,30 @@ class Pet
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read:pet', 'write:pet', 'edit:pet'])]
     private $name;
 
     #[ORM\Column(type: 'float', nullable: true)]
+    #[Groups(['read:pet', 'write:pet', 'edit:pet'])]
     private $weight;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['read:pet', 'write:pet'])]
     private $age;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['read:pet'])]
     private $steps;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['read:pet'])]
     private $activity_time;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['read:pet', 'write:pet', 'put:pet'])]
     private $picture;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'pets')]
@@ -41,13 +104,16 @@ class Pet
     private $user;
 
     #[ORM\OneToOne(mappedBy: 'pet', targetEntity: Necklace::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'cascade')]
+    #[Groups(['read:pet'])]
     private $necklace;
 
     #[ORM\Column(type: 'float', nullable: true)]
+    #[Groups(['read:pet', 'write:pet', 'edit:pet'])]
     private $weightGoal;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['read:pet'])]
     private $status;
 
     public function getId(): ?int
@@ -79,12 +145,12 @@ class Pet
         return $this;
     }
 
-    public function getAge(): ?\DateTime
+    public function getAge(): ?\DateTimeImmutable
     {
         return $this->age;
     }
 
-    public function setAge(?\DateTime $age): self
+    public function setAge(?\DateTimeImmutable $age): self
     {
         $this->age = $age;
 
@@ -144,7 +210,7 @@ class Pet
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(?UserInterface $user): self
     {
         $this->user = $user;
 
