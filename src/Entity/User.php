@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\AuthenticationController;
 use App\Controller\RegisterController;
+use App\Controller\UpdateProfileController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,7 +14,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-use App\Controller\MeController;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
@@ -29,33 +28,43 @@ use App\Controller\MeController;
             'Renormalization_context' => ['groups' => 'login:user'],
             'method' => 'POST',
             'controller' => AuthenticationController::class,
-            'openapi_context' => [
-                'example' => 'hello'
-            ]
         ],
     ],
     itemOperations: [
-        'me' => [
+        'profile' => [
             'pagination_enabled' => false,
-            'path' => '/user/{id}',
+            'path' => '/users/{id}',
             'method' => 'get',
-            'controller' => MeController::class,
-            'read' => false,
             'normalization_context' => ['groups' => 'read:user'],
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
             ]
         ],
-
-        'get' => [
-            'controller' => NotFoundAction::class,
-            'read' => false,
-            'output' => false,
-            'normalization_context' => ['groups' => 'read:user']
+        'editProfile' => [
+            'Renormalization_context' => ['groups' => 'write:user'],
+            'controller' => UpdateProfileController::class,
+            'path' => '/users/{id}/edit',
+            'method' => 'Put',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ]
         ],
+        'logout' => [
+            'controller' => AuthenticationController::class,
+            'path' => 'users/{id}/logout',
+            'method' => 'Post',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ],
+        'deleteAccount' => [
+            'path' => 'users/{id}/delete',
+            'method' => 'Delete',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ]
+        ]
     ],
-    denormalizationContext: ['groups' => ['write:user']],
-    normalizationContext: ['groups' => ['read:user']],
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
@@ -100,6 +109,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
 
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
     private $createdAt;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $updatedAt;
 
     public function __construct()
     {
@@ -293,6 +305,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
