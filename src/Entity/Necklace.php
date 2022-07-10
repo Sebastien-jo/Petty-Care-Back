@@ -8,16 +8,30 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: NecklaceRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [],
+    itemOperations: [
+        'get' => [
+            'normalization_context' => ['groups' => 'read:necklace'],
+            'method' => 'get',
+            'path' => '/necklaces/{id}',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+                'description' => 'get the necklace of your pet'
+            ]
+        ]
+    ]
+)]
 class Necklace
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:necklace'])]
     private $id;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    #[Groups(['read:pet'])]
+    #[Groups(['read:necklace'])]
     private $date_of_purchase;
 
     #[ORM\OneToOne(inversedBy: 'necklace', targetEntity: Pet::class, cascade: ['persist', 'remove'])]
