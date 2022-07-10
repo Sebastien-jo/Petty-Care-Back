@@ -103,13 +103,25 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
         'pet' => [
             'schema' => [
-                'normalization_context' => ['groups' => 'read:media', 'read:pets'],
+                'normalization_context' => ['groups' => 'read:pets'],
             ],
             'method' => 'Get',
             'path'=> '/pets/{id}',
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]],
-                'description' => 'information of one pet'
+                'description' => 'information of one pet',
+                'responses' => [
+                    '200' => [
+                        'description' => 'your pet',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/Pet',
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
             ]
         ],
         'deletePet' => [
@@ -172,7 +184,6 @@ class Pet
     private $status;
 
     #[ORM\OneToOne(targetEntity: Media::class, cascade: ['persist', 'remove'])]
-    #[Groups(['read:media'])]
     private $media;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
