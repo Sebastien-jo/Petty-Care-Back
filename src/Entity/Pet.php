@@ -34,7 +34,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     'content' => [
                         'multipart/form-data' => [
                             'schema' => [
-                        'required' => ['name'],
+                            'required' => ['name'],
                                 'type' => 'object',
                                 'properties' => [
                                     'file' => [

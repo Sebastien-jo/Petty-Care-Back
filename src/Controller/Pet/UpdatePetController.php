@@ -17,6 +17,6 @@ class UpdatePetController extends AbstractController
     {
         $this->petManager->onUpdate($data, $request);
 
-        return $this->json($data, 201, ['message' => 'Pet updated']);
+        return $this->json($data, 200, ['message' => 'Pet updated']);
     }
 }

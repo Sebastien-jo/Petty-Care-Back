@@ -14,9 +14,9 @@ class UserManager
 {
     public function __construct
     (
-        protected PasswordService $passwordService,
-        protected EntityManagerInterface $entityManager,
-        protected UserRepository $userRepository
+        private PasswordService $passwordService,
+        private EntityManagerInterface $entityManager,
+        private UserRepository $userRepository
     )
     {
     }
@@ -68,6 +68,7 @@ class UserManager
         if($file !== null) {
             $media = new Media();
             $media->setFile($file);
+            $user->setMedia($media);
         }
 
         $user->setUpdatedAt(new \DateTimeImmutable());
