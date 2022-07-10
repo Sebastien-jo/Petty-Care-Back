@@ -15,7 +15,7 @@ class PetManager
     public function __construct
     (
         private Security $security,
-        protected EntityManagerInterface $entityManager,
+        private EntityManagerInterface $entityManager,
         private UserRepository $userRepository
     )
     {
@@ -28,7 +28,7 @@ class PetManager
 
         if($file) {
             $media = new Media();
-            $media->setFile($request->files->get('file'));
+            $media->setFile($file);
             $pet->setMedia($media);
         }
 
@@ -47,6 +47,7 @@ class PetManager
         if($file !== null) {
             $media = new Media();
             $media->setFile($file);
+            $pet->setMedia($media);
         }
 
         $pet->setUpdatedAt(new \DateTimeImmutable());
