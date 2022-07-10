@@ -1,12 +1,9 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Pet;
 
-use App\Entity\Media;
-use App\Entity\Pet;
 use App\Manager\PetManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 

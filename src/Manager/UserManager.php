@@ -2,6 +2,7 @@
 
 namespace App\Manager;
 
+use App\Entity\Media;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Services\PasswordService;
@@ -20,7 +21,7 @@ class UserManager
     {
     }
 
-    public function findEmail(string $email)
+    private function findEmail(string $email)
     {
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
@@ -30,13 +31,21 @@ class UserManager
         return null;
     }
 
-    public function register(User $user)
+    public function register(User $user, Request $request)
     {
         $email = $this->findEmail($user->getUserIdentifier());
+        $file = $request->files->get('file');
 
         if($email){
-            throw new BadRequestHttpException("email déjà existant");
+            throw new BadRequestHttpException("email already used");
         }
+
+        if($file) {
+            $media = new Media();
+            $media->setFile($request->files->get('file'));
+            $user->setMedia($media);
+        }
+
         $plainTextPassword = $this->passwordService->hash($user, $user->getPassword());
         $user->setPassword($plainTextPassword);
         $user->setAddress($user->getAddress());
@@ -44,28 +53,25 @@ class UserManager
         $user->setRoles(['ROLE_USER']);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
-
-        return [
-            "message" => "User created",
-            "user" => $user
-        ];
     }
 
-    public function onUpdate(User $user)
+    public function onUpdate(User $user, Request $request)
     {
-        $plainTextPassword = $this->passwordService->hash($user, $user->getPassword());
-        $user->setPassword($plainTextPassword);
+        $password = $request->get('password');
+        $file = $request->files->get('file');
+
+        if($password !== null) {
+            $plainTextPassword = $this->passwordService->hash($user, $user->getPassword());
+            $user->setPassword($plainTextPassword);
+        }
+
+        if($file !== null) {
+            $media = new Media();
+            $media->setFile($file);
+        }
+
         $user->setUpdatedAt(new \DateTimeImmutable());
         $this->entityManager->persist($user);
         $this->entityManager->flush();
-
-        return [
-            "message" => "User updated",
-            "user" => $user
-        ];
-    }
-
-    public function logout()
-    {
     }
 }

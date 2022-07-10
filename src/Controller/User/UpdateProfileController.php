@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\User;
 
 use App\Manager\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,10 +13,10 @@ class UpdateProfileController extends AbstractController
     {
     }
 
-    public function __invoke($data): JsonResponse
+    public function __invoke($data, Request $request): JsonResponse
     {
-        $this->userManager->onUpdate($data);
+        $this->userManager->onUpdate($data, $request);
 
-        return $this->json($data, 201, ['message' => 'User updated']);
+        return $this->json($data, 200, ['message' => 'User updated']);
     }
 }

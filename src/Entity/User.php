@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\AuthenticationController;
-use App\Controller\RegisterController;
-use App\Controller\UpdateProfileController;
+
+use App\Controller\User\RegisterController;
+use App\Controller\User\UpdateProfileController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,15 +19,68 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     collectionOperations: [
         'register' => [
+            'normalizationContext' => ['groups' => 'write:user'],
             'method' => 'post',
             'path' => '/register',
-            'controller' => RegisterController::class
+            'controller' => RegisterController::class,
+            'openapi_context' => [
+                'requestBody' => [
+                    'content' => [
+                        'multipart/form-data' => [
+                            'schema' => [
+                                'required' => ['email', 'password', 'firstname', 'lastname'],
+                                'type' => 'object',
+                                'properties' => [
+                                    'file' => [
+                                        'type' => 'string',
+                                        'format' => 'binary',
+                                    ],
+                                    'email' => [
+                                        'type' => 'string'
+                                    ],
+                                    'password' => [
+                                        'type' => 'string'
+                                    ],
+                                    'firstname' => [
+                                        'type' => 'string'
+                                    ],
+                                    'lastname' => [
+                                        'type' => 'string'
+                                    ],
+                                    'address' => [
+                                        'type' => 'string'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
         ],
         'login' => [
             'path' => '/login',
-            'Renormalization_context' => ['groups' => 'login:user'],
+            'normalization_context' => ['groups' => 'login:user'],
             'method' => 'POST',
-            'controller' => AuthenticationController::class,
+            'openapi_context' => [
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'required' => ['email', 'password'],
+                                'type' => 'object',
+                                'properties' => [
+                                    'username' => [
+                                        'type' => 'string'
+                                    ],
+                                    'password' => [
+                                        'type' => 'string'
+                                    ],
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
         ],
     ],
     itemOperations: [
@@ -46,15 +99,35 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'path' => '/users/{id}/edit',
             'method' => 'Put',
             'openapi_context' => [
-                'security' => [['bearerAuth' => []]]
-            ]
-        ],
-        'logout' => [
-            'controller' => AuthenticationController::class,
-            'path' => 'users/{id}/logout',
-            'method' => 'Post',
-            'openapi_context' => [
-                'security' => [['bearerAuth' => []]]
+                'security' => [['bearerAuth' => []]],
+                'requestBody' => [
+                    'content' => [
+                        'application/x-www-form-urlencoded' => [
+                            'schema' => [
+                                'required' => ['name'],
+                                'type' => 'object',
+                                'properties' => [
+                                    'file' => [
+                                        'type' => 'string',
+                                        'format' => 'binary',
+                                    ],
+                                    'firstname' => [
+                                        'type' => 'string'
+                                    ],
+                                    'lastname' => [
+                                        'type' => 'string'
+                                    ],
+                                    'email' => [
+                                        'type' => 'string'
+                                    ],
+                                    'password' => [
+                                        'type' => 'string'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
             ]
         ],
         'deleteAccount' => [
