@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\NecklaceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: NecklaceRepository::class)]
 #[ApiResource]
@@ -16,6 +17,7 @@ class Necklace
     private $id;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['read:pet'])]
     private $date_of_purchase;
 
     #[ORM\OneToOne(inversedBy: 'necklace', targetEntity: Pet::class, cascade: ['persist', 'remove'])]

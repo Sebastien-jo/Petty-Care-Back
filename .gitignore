@@ -7,6 +7,10 @@
 /public/bundles/
 /var/
 /vendor/
+.iml
+.xml
+/public/images
+/src/openapi.yaml
 ###< symfony/framework-bundle ###
 
 ###> lexik/jwt-authentication-bundle ###

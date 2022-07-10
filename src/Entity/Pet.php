@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreatePetController;
+use App\Controller\UpdatePetController;
 use App\Repository\PetRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -13,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     collectionOperations: [
         'pets' => [
-            'normalization_context' => ['groups' => 'read:pet'],
+            'normalization_context' => ['groups' => 'read:pets'],
             'method' => 'Get',
             'path' => '/pets',
             'openapi_context' => [
@@ -28,14 +30,81 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'path' => '/pets/create',
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]],
-                'description' => 'add a new pet'
+                'description' => 'add a new pet',
+                'requestBody' => [
+                    'content' => [
+                        'multipart/form-data' => [
+                            'schema' => [
+                        'required' => ['name'],
+                                'type' => 'object',
+                                'properties' => [
+                                    'file' => [
+                                        'type' => 'string',
+                                        'format' => 'binary',
+                                    ],
+                                    'name' => [
+                                        'type' => 'string'
+                                    ],
+                                    'age' => [
+                                        'type' => 'Datetime',
+                                        'nullable' => true
+                                    ],
+                                    'weight' => [
+                                        'type' => 'float'
+                                    ],
+                                    'weight_goal' => [
+                                        'type' => 'float'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
                 ]
+            ]
         ]
     ],
     itemOperations: [
+        'patch' => [
+            'method' => 'patch',
+            'controller' => UpdatePetController::class,
+            'Renormalization_context' => ['groups' => 'write:pet'],
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+                'description' => 'edit info for a pet',
+                'requestBody' => [
+                    'content' => [
+                        'application/x-www-form-urlencoded' => [
+                            'schema' => [
+                                'required' => ['name'],
+                                'type' => 'object',
+                                'properties' => [
+                                    'file' => [
+                                        'type' => 'string',
+                                        'format' => 'binary',
+                                    ],
+                                    'name' => [
+                                        'type' => 'string'
+                                    ],
+                                    'age' => [
+                                        'type' => 'string',
+                                        'nullable' => true
+                                    ],
+                                    'weight' => [
+                                        'type' => 'float'
+                                    ],
+                                    'weight_goal' => [
+                                        'type' => 'float'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ],
         'pet' => [
             'schema' => [
-                'normalization_context' => ['groups' => 'read:pet'],
+                'normalization_context' => ['groups' => 'read:media', 'read:pets'],
             ],
             'method' => 'Get',
             'path'=> '/pets/{id}',
@@ -52,17 +121,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 'description' => 'delete a pet'
             ]
         ],
-        'editPet' => [
-            'schema' => [
-                'Renormalization_context' => ['groups' => 'put:pet'],
-            ],
-            'method' => 'Put',
-            'path' => 'pets/{id}/edit',
-            'openapi_context' => [
-                'security' => [['bearerAuth' => []]],
-                'description' => 'edit information for a pet'
-            ]
-        ]
     ]
 )]
 class Pet
@@ -70,51 +128,56 @@ class Pet
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:pets'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:pet', 'write:pet', 'edit:pet'])]
+    #[Groups(['read:pets', 'write:pet'])]
     private $name;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    #[Groups(['read:pet', 'write:pet', 'edit:pet'])]
+    #[Groups(['read:pets', 'write:pet'])]
     private $weight;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    #[Groups(['read:pet', 'write:pet'])]
+    #[Groups(['write:pet', 'read:pets'])]
     private $age;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['read:pet'])]
+    #[Groups(['read:pets'])]
     private $steps;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['read:pet'])]
+    #[Groups(['read:pets'])]
     private $activity_time;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['read:pet', 'write:pet', 'put:pet'])]
-    private $picture;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'pets')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:pets'])]
     private $user;
 
     #[ORM\OneToOne(mappedBy: 'pet', targetEntity: Necklace::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: true, onDelete: 'cascade')]
-    #[Groups(['read:pet'])]
+    #[Groups(['read:pets'])]
     private $necklace;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    #[Groups(['read:pet', 'write:pet', 'edit:pet'])]
+    #[Groups(['read:pets', 'write:Pet'])]
     private $weightGoal;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['read:pet'])]
+    #[Groups(['read:pets'])]
     private $status;
+
+    #[ORM\OneToOne(targetEntity: Media::class, cascade: ['persist', 'remove'])]
+    #[Groups(['read:media'])]
+    private $media;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $updatedAt;
 
     public function getId(): ?int
     {
@@ -193,18 +256,6 @@ class Pet
         return $this;
     }
 
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
-    public function setPicture(?string $picture): self
-    {
-        $this->picture = $picture;
-
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -259,6 +310,30 @@ class Pet
     public function setStatus(?string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getMedia(): ?Media
+    {
+        return $this->media;
+    }
+
+    public function setMedia(?Media $media): self
+    {
+        $this->media = $media;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
