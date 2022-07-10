@@ -32,9 +32,13 @@ security:
             provider: jwt
             pattern: ^/api
             stateless: true
+            entry_point: jwt
             jwt: ~
+            refresh_jwt:
+                check_path: /api/token/refresh
+                provider : jwt
             logout:
-                path: app_logout
+                path: api_token_invalidate
 
 #        main:
 #            lazy: true
