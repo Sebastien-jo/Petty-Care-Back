@@ -27,6 +27,9 @@ class Shop
     #[ORM\Column(type: 'string', length: 255)]
     private $ref;
 
+    #[ORM\OneToOne(targetEntity: Media::class, cascade: ['persist', 'remove'])]
+    private $media;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,6 +79,18 @@ class Shop
     public function setRef(string $ref): self
     {
         $this->ref = $ref;
+
+        return $this;
+    }
+
+    public function getMedia(): ?Media
+    {
+        return $this->media;
+    }
+
+    public function setMedia(?Media $media): self
+    {
+        $this->media = $media;
 
         return $this;
     }

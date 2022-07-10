@@ -19,7 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     collectionOperations: [
         'register' => [
-            'method' => 'POST',
+            'method' => 'post',
             'path' => '/register',
             'controller' => RegisterController::class
         ],
@@ -71,7 +71,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:user'])]
+    #[Groups(['read:user', 'read:pet'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
@@ -112,6 +112,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
+
+    #[ORM\OneToOne(targetEntity: Media::class, cascade: ['persist', 'remove'])]
+    private $media;
 
     public function __construct()
     {
@@ -317,6 +320,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getMedia(): ?Media
+    {
+        return $this->media;
+    }
+
+    public function setMedia(?Media $media): self
+    {
+        $this->media = $media;
 
         return $this;
     }

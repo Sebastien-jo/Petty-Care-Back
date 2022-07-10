@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Services\PasswordService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class UserManager
@@ -62,5 +63,9 @@ class UserManager
             "message" => "User updated",
             "user" => $user
         ];
+    }
+
+    public function logout()
+    {
     }
 }

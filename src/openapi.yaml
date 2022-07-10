@@ -1,80 +1,96 @@
 openapi: 3.0.3
 info:
-  title: 'Petty-Care API'
-  description: 'szxzx'
-  version: 1.0.0
+  title: ''
+  description: ''
+  version: 0.0.0
 servers:
-  - url: 'https://localhost:8000/api'
+  -
+    url: /
     description: ''
 paths:
-  /api/me:
-    get:
-      operationId: meUserCollection
+  /api/login:
+    post:
+      operationId: loginUserCollection
       tags:
         - User
       responses:
-        200:
-          description: 'User collection'
+        201:
+          description: 'User resource created'
           content:
-            application/ld+json:
-              schema:
-                type: object
-                properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/User.jsonld-read.user' } }
-                  'hydra:totalItems': { type: integer, minimum: 0 }
-                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
-                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
-                required:
-                  - 'hydra:member'
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User-read.user'
+                $ref: '#/components/schemas/User'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/User.jsonld'
             text/html:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User-read.user'
-      summary: 'Retrieves the collection of User resources.'
-      description: 'Retrieves the collection of User resources.'
+                $ref: '#/components/schemas/User'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/User'
+          links: {  }
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+      summary: 'Creates a User resource.'
+      description: 'Creates a User resource.'
       parameters: []
+      requestBody:
+        description: 'The new User resource'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/User.jsonld'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
       deprecated: false
-      security:
-        -
-          bearerAuth: []
     parameters: []
-  /api/pets:
+  /api/necklaces:
     get:
-      operationId: getPetCollection
+      operationId: getNecklaceCollection
       tags:
-        - Pet
+        - Necklace
       responses:
         200:
-          description: 'Pet collection'
+          description: 'Necklace collection'
           content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Necklace'
             application/ld+json:
               schema:
                 type: object
                 properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Pet.jsonld' } }
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Necklace.jsonld' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
                   'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
                   'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
                 required:
                   - 'hydra:member'
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Pet'
             text/html:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Pet'
-      summary: 'Retrieves the collection of Pet resources.'
-      description: 'Retrieves the collection of Pet resources.'
+                  $ref: '#/components/schemas/Necklace'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Necklace'
+      summary: 'Retrieves the collection of Necklace resources.'
+      description: 'Retrieves the collection of Necklace resources.'
       parameters:
         -
           name: page
@@ -91,72 +107,81 @@ paths:
           allowReserved: false
       deprecated: false
     post:
-      operationId: postPetCollection
+      operationId: postNecklaceCollection
       tags:
-        - Pet
+        - Necklace
       responses:
         201:
-          description: 'Pet resource created'
+          description: 'Necklace resource created'
           content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Pet.jsonld'
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'
+                $ref: '#/components/schemas/Necklace'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Necklace.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/Pet'
+                $ref: '#/components/schemas/Necklace'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/Necklace'
           links:
-            GetPetItem:
-              operationId: getPetItem
+            GetNecklaceItem:
+              operationId: getNecklaceItem
               parameters:
                 id: '$response.body#/id'
-              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/pets/{id}`.'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/necklaces/{id}`.'
         400:
           description: 'Invalid input'
         422:
           description: 'Unprocessable entity'
-      summary: 'Creates a Pet resource.'
-      description: 'Creates a Pet resource.'
+      summary: 'Creates a Necklace resource.'
+      description: 'Creates a Necklace resource.'
       parameters: []
       requestBody:
-        description: 'The new Pet resource'
+        description: 'The new Necklace resource'
         content:
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/Pet.jsonld'
           application/json:
             schema:
-              $ref: '#/components/schemas/Pet'
+              $ref: '#/components/schemas/Necklace'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Necklace.jsonld'
           text/html:
             schema:
-              $ref: '#/components/schemas/Pet'
+              $ref: '#/components/schemas/Necklace'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Necklace'
         required: true
       deprecated: false
     parameters: []
-  '/api/pets/{id}':
+  '/api/necklaces/{id}':
     get:
-      operationId: getPetItem
+      operationId: getNecklaceItem
       tags:
-        - Pet
+        - Necklace
       responses:
         200:
-          description: 'Pet resource'
+          description: 'Necklace resource'
           content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Pet.jsonld'
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'
+                $ref: '#/components/schemas/Necklace'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Necklace.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/Pet'
+                $ref: '#/components/schemas/Necklace'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/Necklace'
         404:
           description: 'Resource not found'
-      summary: 'Retrieves a Pet resource.'
-      description: 'Retrieves a Pet resource.'
+      summary: 'Retrieves a Necklace resource.'
+      description: 'Retrieves a Necklace resource.'
       parameters:
         -
           name: id
@@ -172,36 +197,39 @@ paths:
           allowReserved: false
       deprecated: false
     put:
-      operationId: putPetItem
+      operationId: putNecklaceItem
       tags:
-        - Pet
+        - Necklace
       responses:
         200:
-          description: 'Pet resource updated'
+          description: 'Necklace resource updated'
           content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Pet.jsonld'
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'
+                $ref: '#/components/schemas/Necklace'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Necklace.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/Pet'
+                $ref: '#/components/schemas/Necklace'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/Necklace'
           links:
-            GetPetItem:
-              operationId: getPetItem
+            GetNecklaceItem:
+              operationId: getNecklaceItem
               parameters:
                 id: '$response.body#/id'
-              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/pets/{id}`.'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/necklaces/{id}`.'
         400:
           description: 'Invalid input'
         422:
           description: 'Unprocessable entity'
         404:
           description: 'Resource not found'
-      summary: 'Replaces the Pet resource.'
-      description: 'Replaces the Pet resource.'
+      summary: 'Replaces the Necklace resource.'
+      description: 'Replaces the Necklace resource.'
       parameters:
         -
           name: id
@@ -216,30 +244,33 @@ paths:
           explode: false
           allowReserved: false
       requestBody:
-        description: 'The updated Pet resource'
+        description: 'The updated Necklace resource'
         content:
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/Pet.jsonld'
           application/json:
             schema:
-              $ref: '#/components/schemas/Pet'
+              $ref: '#/components/schemas/Necklace'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Necklace.jsonld'
           text/html:
             schema:
-              $ref: '#/components/schemas/Pet'
+              $ref: '#/components/schemas/Necklace'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Necklace'
         required: true
       deprecated: false
     delete:
-      operationId: deletePetItem
+      operationId: deleteNecklaceItem
       tags:
-        - Pet
+        - Necklace
       responses:
         204:
-          description: 'Pet resource deleted'
+          description: 'Necklace resource deleted'
         404:
           description: 'Resource not found'
-      summary: 'Removes the Pet resource.'
-      description: 'Removes the Pet resource.'
+      summary: 'Removes the Necklace resource.'
+      description: 'Removes the Necklace resource.'
       parameters:
         -
           name: id
@@ -255,36 +286,272 @@ paths:
           allowReserved: false
       deprecated: false
     patch:
-      operationId: patchPetItem
+      operationId: patchNecklaceItem
       tags:
-        - Pet
+        - Necklace
       responses:
         200:
-          description: 'Pet resource updated'
+          description: 'Necklace resource updated'
           content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Pet.jsonld'
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'
+                $ref: '#/components/schemas/Necklace'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Necklace.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/Pet'
+                $ref: '#/components/schemas/Necklace'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/Necklace'
           links:
-            GetPetItem:
-              operationId: getPetItem
+            GetNecklaceItem:
+              operationId: getNecklaceItem
               parameters:
                 id: '$response.body#/id'
-              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/pets/{id}`.'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/necklaces/{id}`.'
         400:
           description: 'Invalid input'
         422:
           description: 'Unprocessable entity'
         404:
           description: 'Resource not found'
-      summary: 'Updates the Pet resource.'
-      description: 'Updates the Pet resource.'
+      summary: 'Updates the Necklace resource.'
+      description: 'Updates the Necklace resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated Necklace resource'
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/Necklace'
+        required: true
+      deprecated: false
+    parameters: []
+  /api/pets:
+    get:
+      operationId: petsPetCollection
+      tags:
+        - Pet
+      responses:
+        200:
+          description: 'Pet collection'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet-read.pet'
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Pet.jsonld-read.pet' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet-read.pet'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet-read.pet'
+      summary: 'Retrieves the collection of Pet resources.'
+      description: 'retrieve all your pets'
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: false
+          allowReserved: false
+      deprecated: false
+      security:
+        -
+          bearerAuth: []
+    parameters: []
+  /api/pets/create:
+    post:
+      operationId: createPetPetCollection
+      tags:
+        - Pet
+      responses:
+        201:
+          description: 'Pet resource created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Pet.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Pet'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/Pet'
+          links: {  }
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+      summary: 'Creates a Pet resource.'
+      description: 'add a new pet'
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                picture:
+                  type: string
+                  format: binary
+                name:
+                  type: string
+                age:
+                  type: datetime
+                weight:
+                  type: float
+                weight_goal:
+                  type: string
+        required: false
+      deprecated: false
+      security:
+        -
+          bearerAuth: []
+    parameters: []
+  '/api/pets/{id}':
+    get:
+      operationId: petPetItem
+      tags:
+        - Pet
+      responses:
+        200:
+          description: 'Pet resource'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Pet.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Pet'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        404:
+          description: 'Resource not found'
+      summary: 'Retrieves a Pet resource.'
+      description: 'information of one pet'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+      security:
+        -
+          bearerAuth: []
+    parameters: []
+  '/api/pets/{id}/delete':
+    delete:
+      operationId: deletePetPetItem
+      tags:
+        - Pet
+      responses:
+        204:
+          description: 'Pet resource deleted'
+        404:
+          description: 'Resource not found'
+      summary: 'Removes the Pet resource.'
+      description: 'delete a pet'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+      security:
+        -
+          bearerAuth: []
+    parameters: []
+  '/api/pets/{id}/edit':
+    put:
+      operationId: editPetPetItem
+      tags:
+        - Pet
+      responses:
+        200:
+          description: 'Pet resource updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Pet.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Pet'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/Pet'
+          links: {  }
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Replaces the Pet resource.'
+      description: 'edit information for a pet'
       parameters:
         -
           name: id
@@ -301,36 +568,516 @@ paths:
       requestBody:
         description: 'The updated Pet resource'
         content:
-          application/x-www-form-urlencoded:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Pet.jsonld'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Pet'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/Pet'
         required: true
       deprecated: false
+      security:
+        -
+          bearerAuth: []
     parameters: []
   /api/register:
     post:
-      operationId: register2UserItem
+      operationId: registerUserCollection
       tags:
         - User
       responses:
         201:
           description: 'User resource created'
           content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/User.jsonld-read.user'
+                $ref: '#/components/schemas/User.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/User'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/User'
+          links: {  }
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+      summary: 'Creates a User resource.'
+      description: 'Creates a User resource.'
+      parameters: []
+      requestBody:
+        description: 'The new User resource'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/User.jsonld'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      deprecated: false
+    parameters: []
+  /api/shops:
+    get:
+      operationId: getShopCollection
+      tags:
+        - Shop
+      responses:
+        200:
+          description: 'Shop collection'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Shop'
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Shop.jsonld' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Shop'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Shop'
+      summary: 'Retrieves the collection of Shop resources.'
+      description: 'Retrieves the collection of Shop resources.'
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: false
+          allowReserved: false
+      deprecated: false
+    post:
+      operationId: postShopCollection
+      tags:
+        - Shop
+      responses:
+        201:
+          description: 'Shop resource created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shop'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Shop.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Shop'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/Shop'
+          links:
+            GetShopItem:
+              operationId: getShopItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/shops/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+      summary: 'Creates a Shop resource.'
+      description: 'Creates a Shop resource.'
+      parameters: []
+      requestBody:
+        description: 'The new Shop resource'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Shop'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Shop.jsonld'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Shop'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Shop'
+        required: true
+      deprecated: false
+    parameters: []
+  '/api/shops/{id}':
+    get:
+      operationId: getShopItem
+      tags:
+        - Shop
+      responses:
+        200:
+          description: 'Shop resource'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shop'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Shop.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Shop'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/Shop'
+        404:
+          description: 'Resource not found'
+      summary: 'Retrieves a Shop resource.'
+      description: 'Retrieves a Shop resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    put:
+      operationId: putShopItem
+      tags:
+        - Shop
+      responses:
+        200:
+          description: 'Shop resource updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shop'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Shop.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Shop'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/Shop'
+          links:
+            GetShopItem:
+              operationId: getShopItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/shops/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Replaces the Shop resource.'
+      description: 'Replaces the Shop resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated Shop resource'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Shop'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Shop.jsonld'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Shop'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Shop'
+        required: true
+      deprecated: false
+    delete:
+      operationId: deleteShopItem
+      tags:
+        - Shop
+      responses:
+        204:
+          description: 'Shop resource deleted'
+        404:
+          description: 'Resource not found'
+      summary: 'Removes the Shop resource.'
+      description: 'Removes the Shop resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    patch:
+      operationId: patchShopItem
+      tags:
+        - Shop
+      responses:
+        200:
+          description: 'Shop resource updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shop'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Shop.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Shop'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/Shop'
+          links:
+            GetShopItem:
+              operationId: getShopItem
+              parameters:
+                id: '$response.body#/id'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/shops/{id}`.'
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Updates the Shop resource.'
+      description: 'Updates the Shop resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated Shop resource'
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/Shop'
+        required: true
+      deprecated: false
+    parameters: []
+  '/api/users/{id}':
+    get:
+      operationId: profileUserItem
+      tags:
+        - User
+      responses:
+        200:
+          description: 'User resource'
+          content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User-read.user'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/User.jsonld-read.user'
             text/html:
               schema:
                 $ref: '#/components/schemas/User-read.user'
-          links:
-            GetUserItem:
-              operationId: getUserItem
-              parameters:
-                id: '$response.body#/id'
-              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/users/{id}`.'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/User-read.user'
+        404:
+          description: 'Resource not found'
+      summary: 'Retrieves a User resource.'
+      description: 'Retrieves a User resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+      security:
+        -
+          bearerAuth: []
+    parameters: []
+  '/api/users/{id}/delete':
+    delete:
+      operationId: deleteAccountUserItem
+      tags:
+        - User
+      responses:
+        204:
+          description: 'User resource deleted'
+        404:
+          description: 'Resource not found'
+      summary: 'Removes the User resource.'
+      description: 'Removes the User resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+      security:
+        -
+          bearerAuth: []
+    parameters: []
+  '/api/users/{id}/edit':
+    put:
+      operationId: editProfileUserItem
+      tags:
+        - User
+      responses:
+        200:
+          description: 'User resource updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/User.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/User'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/User'
+          links: {  }
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Replaces the User resource.'
+      description: 'Replaces the User resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Resource identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated User resource'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/User.jsonld'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      deprecated: false
+      security:
+        -
+          bearerAuth: []
+    parameters: []
+  '/api/users/{id}/logout':
+    post:
+      operationId: logoutUserItem
+      tags:
+        - User
+      responses:
+        201:
+          description: 'User resource created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/User.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/User'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/User'
+          links: {  }
         400:
           description: 'Invalid input'
         422:
@@ -355,51 +1102,23 @@ paths:
       requestBody:
         description: 'The new User resource'
         content:
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/User.jsonld-write.user'
           application/json:
             schema:
-              $ref: '#/components/schemas/User-write.user'
+              $ref: '#/components/schemas/User'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/User.jsonld'
           text/html:
             schema:
-              $ref: '#/components/schemas/User-write.user'
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
         required: true
       deprecated: false
-    parameters: []
-  '/api/users/{id}':
-    get:
-      operationId: getUserItem
-      tags:
-        - User
-      responses:
-        204:
-          description: 'User resource'
-          content:
-            application/ld+json:
-              schema: {  }
-            application/json:
-              schema: {  }
-            text/html:
-              schema: {  }
-        404:
-          description: 'Resource not found'
-      summary: 'Retrieves a User resource.'
-      description: 'Retrieves a User resource.'
-      parameters:
+      security:
         -
-          name: id
-          in: path
-          description: 'Resource identifier'
-          required: true
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: string
-          style: simple
-          explode: false
-          allowReserved: false
-      deprecated: false
+          bearerAuth: []
     parameters: []
 components:
   schemas:
@@ -476,7 +1195,8 @@ components:
           type: number
           nullable: true
         age:
-          type: integer
+          type: string
+          format: date-time
           nullable: true
         steps:
           type: integer
@@ -490,17 +1210,58 @@ components:
           nullable: true
         picture:
           type: string
+          format: binary
+          nullable: true
+        pictureUrl:
+          type: string
           nullable: true
         user:
           type: string
           format: iri-reference
         necklace:
+          type: string
+          format: iri-reference
           nullable: true
-          anyOf:
-            -
-              $ref: '#/components/schemas/Necklace'
+        weightGoal:
+          type: number
+          nullable: true
+        status:
+          type: string
+          nullable: true
+        picturePath:
+          type: string
+          nullable: true
         activityTime:
           type: integer
+          nullable: true
+    Pet-read.pet:
+      type: object
+      properties:
+        name:
+          type: string
+        weight:
+          type: number
+          nullable: true
+        age:
+          type: string
+          format: date-time
+          nullable: true
+        steps:
+          type: integer
+          nullable: true
+        activity_time:
+          readOnly: true
+          type: integer
+          nullable: true
+        necklace:
+          type: string
+          format: iri-reference
+          nullable: true
+        weightGoal:
+          type: number
+          nullable: true
+        status:
+          type: string
           nullable: true
     Pet.jsonld:
       type: object
@@ -537,7 +1298,8 @@ components:
           type: number
           nullable: true
         age:
-          type: integer
+          type: string
+          format: date-time
           nullable: true
         steps:
           type: integer
@@ -551,20 +1313,159 @@ components:
           nullable: true
         picture:
           type: string
+          format: binary
+          nullable: true
+        pictureUrl:
+          type: string
           nullable: true
         user:
           type: string
           format: iri-reference
         necklace:
+          type: string
+          format: iri-reference
           nullable: true
-          anyOf:
-            -
-              $ref: '#/components/schemas/Necklace.jsonld'
+        weightGoal:
+          type: number
+          nullable: true
+        status:
+          type: string
+          nullable: true
+        picturePath:
+          type: string
+          nullable: true
         activityTime:
           type: integer
           nullable: true
+    Pet.jsonld-read.pet:
+      type: object
+      properties:
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        name:
+          type: string
+        weight:
+          type: number
+          nullable: true
+        age:
+          type: string
+          format: date-time
+          nullable: true
+        steps:
+          type: integer
+          nullable: true
+        activity_time:
+          readOnly: true
+          type: integer
+          nullable: true
+        necklace:
+          type: string
+          format: iri-reference
+          nullable: true
+        weightGoal:
+          type: number
+          nullable: true
+        status:
+          type: string
+          nullable: true
+    Shop:
+      type: object
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        name:
+          type: string
+        stock:
+          type: integer
+        price:
+          type: string
+        ref:
+          type: string
+    Shop.jsonld:
+      type: object
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        name:
+          type: string
+        stock:
+          type: integer
+        price:
+          type: string
+        ref:
+          type: string
+    Toy:
+      type: object
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        user:
+          type: string
+          format: iri-reference
     Toy-read.user:
       type: object
+    Toy.jsonld:
+      type: object
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        user:
+          type: string
+          format: iri-reference
     Toy.jsonld-read.user:
       type: object
       properties:
@@ -591,6 +1492,47 @@ components:
         '@type':
           readOnly: true
           type: string
+    User:
+      type: object
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        email:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+        password:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        address:
+          type: string
+          nullable: true
+        pets:
+          type: array
+          items:
+            type: string
+            format: iri-reference
+        toys:
+          type: array
+          items:
+            $ref: '#/components/schemas/Toy'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+        userIdentifier:
+          readOnly: true
+          description: 'A visual identifier that represents this user.'
+          type: string
     User-read.user:
       type: object
       properties:
@@ -615,29 +1557,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Toy-read.user'
-    User-write.user:
+    User.jsonld:
       type: object
       properties:
-        email:
-          type: string
-        password:
-          type: string
-        firstname:
-          type: string
-        lastname:
-          type: string
-        address:
-          type: string
-          nullable: true
-    User.jsonld-read.user:
-      type: object
-      properties:
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
         '@context':
           readOnly: true
           oneOf:
@@ -655,6 +1577,76 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        email:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+        password:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        address:
+          type: string
+          nullable: true
+        pets:
+          type: array
+          items:
+            type: string
+            format: iri-reference
+        toys:
+          type: array
+          items:
+            $ref: '#/components/schemas/Toy.jsonld'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+        userIdentifier:
+          readOnly: true
+          description: 'A visual identifier that represents this user.'
+          type: string
+    User.jsonld-read.user:
+      type: object
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         id:
           readOnly: true
           type: integer
@@ -676,43 +1668,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Toy.jsonld-read.user'
-    User.jsonld-write.user:
-      type: object
-      properties:
-        '@context':
-          readOnly: true
-          oneOf:
-            -
-              type: string
-            -
-              type: object
-              properties:
-                '@vocab':
-                  type: string
-                hydra:
-                  type: string
-                  enum: ['http://www.w3.org/ns/hydra/core#']
-              required:
-                - '@vocab'
-                - hydra
-              additionalProperties: true
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
-        email:
-          type: string
-        password:
-          type: string
-        firstname:
-          type: string
-        lastname:
-          type: string
-        address:
-          type: string
-          nullable: true
     Credentials:
       type: object
       properties:
@@ -733,3 +1688,4 @@ components:
       bearerFormat: JWT
 security: []
 tags: []
+
