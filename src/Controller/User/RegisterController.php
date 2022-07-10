@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\User;
 
 use App\Manager\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class RegisterController extends AbstractController
 {
@@ -12,9 +13,9 @@ class RegisterController extends AbstractController
     {
     }
 
-    public function __invoke($data): JsonResponse
+    public function __invoke($data, Request $request): JsonResponse
     {
-        $this->userManager->register($data);
+        $this->userManager->register($data, $request);
 
         return $this->json($data, 201, ['message' => 'User created']);
     }

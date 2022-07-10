@@ -36,7 +36,7 @@ class Media
      * @return File|null
      * @Vich\UploadableField(mapping="media", fileNameProperty="file_path")
      */
-    #[Groups(['write:pet'])]
+    #[Groups(['write:pet', 'write:user'])]
     private $file;
 
     /** @var string|null */

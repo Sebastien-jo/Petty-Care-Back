@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\User;
 
+use App\Manager\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AuthenticationController extends AbstractController
+class LogoutController extends AbstractController
 {
-    #[Route(path: '/api/users/{id}/logout', name: 'app_logout', methods: ['POST'])]
+    #[Route(path: 'api/logout', name: 'app_logout')]
     public function logout()
     {
     }

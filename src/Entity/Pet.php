@@ -2,10 +2,9 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\CreatePetController;
-use App\Controller\UpdatePetController;
+use App\Controller\Pet\CreatePetController;
+use App\Controller\Pet\UpdatePetController;
 use App\Repository\PetRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
