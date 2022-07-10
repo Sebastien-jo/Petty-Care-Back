@@ -9,14 +9,23 @@ services:
       MYSQL_ROOT_PASSWORD: password
     ports:
       - '3306:3306'
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+    healthcheck:
+      test: ["CMD-SHELL", "mysql -uroot -ppassword"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
 
+###< doctrine/doctrine-bundle ###
   app:
-    image: petty-care:latest
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+#    image: petty-care:latest
+    depends_on:
+      - database
     ports:
-      - "8080:80"
+      - "8000:8000"
 
 volumes:
   db-data:
