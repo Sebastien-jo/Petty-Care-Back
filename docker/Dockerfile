@@ -24,6 +24,11 @@ RUN apt install -yqq symfony-cli
 
 RUN symfony server:ca:install
 
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash
+RUN apt install -yqq symfony-cli
+
+RUN symfony server:ca:install
+
 WORKDIR /var/www/
 
 ENTRYPOINT ["symfony", "serve"]
