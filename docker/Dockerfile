@@ -16,11 +16,11 @@ COPY . /var/www/
 
 COPY ./docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
-RUN cd /var/www && \
-    composer install \
-
 RUN curl -1slf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash
 RUN apt install -yqq symfony-cli
+
+RUN cd /var/www && \
+    composer install
 
 RUN symfony server:ca:install
 
